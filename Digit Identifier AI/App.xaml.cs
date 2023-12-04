@@ -20,7 +20,13 @@ namespace Digit_Identifier_AI
         {
             base.OnStartup(e);
             Debug.WriteLine("vittu");
-            var test = new Network(new List<int> { 2, 3, 1 });
+            var parameters = new NetworkParameters
+            {
+                Sizes = new List<int> { 2, 3, 1 },
+                MiniBatchSize = 1000,
+                Epochs = 3,
+            };
+            var test = new Network(parameters);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BL
     public static class Initialize
     {
         // Standard mean deviation function for random value generation
-        public static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 1.0);
+        private static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 1.0);
 
         public static List<Matrix<double>> Biases(List<int> sizes)
         {
@@ -35,6 +35,21 @@ namespace BL
             }
 
             return weights;
+        }
+
+        public static List<List<Tuple<Vector<double>, int>>> MiniBatches(List<Tuple<Vector<double>, int>> trainingData, int miniBatchSize)
+        {
+            var miniBatches = new List<List<Tuple<Vector<double>, int>>>(); // Dear me...
+
+            for (int i = 0; i < trainingData.Count; i += miniBatchSize)
+            {
+                var endIsBeyondRange = i + miniBatchSize > trainingData.Count;
+
+                if (endIsBeyondRange) miniBatches.Add(trainingData.GetRange(i, trainingData.Count - i));
+                else miniBatches.Add(trainingData.GetRange(i, miniBatchSize));
+            }
+
+            return miniBatches;
         }
     }
 }
