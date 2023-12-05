@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace BL
 {
+    /// <summary>
+    /// Initialization of various matrices and lists
+    /// </summary>
     public static class Initialize
     {
         // Standard mean deviation function for random value generation
         private static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 1.0);
 
+        /// <summary>
+        /// Randomly generate initial neuron biases and insert them into required matrices
+        /// </summary>
+        /// <param name="sizes"></param>
+        /// <returns></returns>
         public static List<Matrix<double>> Biases(List<int> sizes)
         {
             var biases = new List<Matrix<double>>();
@@ -25,6 +33,11 @@ namespace BL
             return biases;
         }
 
+        /// <summary>
+        /// Randomly generate initial neuron weights and insert them into required matrices
+        /// </summary>
+        /// <param name="sizes"></param>
+        /// <returns></returns>
         public static List<Matrix<double>> Weights(List<int> sizes)
         {
             var weights = new List<Matrix<double>>();
@@ -37,9 +50,17 @@ namespace BL
             return weights;
         }
 
-        public static List<List<Tuple<Vector<double>, int>>> MiniBatches(List<Tuple<Vector<double>, int>> trainingData, int miniBatchSize)
+        /// <summary>
+        /// Split training data into smaller, so called, mini-batches. Mini-batch size affects the speed
+        /// of the learning process, with lower values being faster. Lower values, however, may not lead to
+        /// better learning.
+        /// </summary>
+        /// <param name="trainingData"></param>
+        /// <param name="miniBatchSize"></param>
+        /// <returns></returns>
+        public static List<List<Tuple<Matrix<double>, int>>> MiniBatches(List<Tuple<Matrix<double>, int>> trainingData, int miniBatchSize)
         {
-            var miniBatches = new List<List<Tuple<Vector<double>, int>>>(); // Dear me...
+            var miniBatches = new List<List<Tuple<Matrix<double>, int>>>(); // Dear me...
 
             for (int i = 0; i < trainingData.Count; i += miniBatchSize)
             {
@@ -50,6 +71,26 @@ namespace BL
             }
 
             return miniBatches;
+        }
+
+        /// <summary>
+        /// Initialize a zero matrix with the same dimensions as the input matrix
+        /// </summary>
+        /// <param name="inputMatrices"></param>
+        /// <returns></returns>
+        public static List<Matrix<double>> ZeroMatrices(List<Matrix<double>> inputMatrices)
+        {
+            var zeroMatrices = new List<Matrix<double>>();
+
+            for (var i = 0; i < inputMatrices.Count; i++)
+            {
+                var columns = inputMatrices[i].ColumnCount;
+                var rows = inputMatrices[i].RowCount;
+                var matrix = Matrix<double>.Build;
+                zeroMatrices.Add(matrix.Dense(rows, columns));
+            }
+
+            return zeroMatrices;
         }
     }
 }
