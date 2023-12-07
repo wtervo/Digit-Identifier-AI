@@ -19,15 +19,16 @@ namespace Digit_Identifier_AI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            Debug.WriteLine("vittu");
             var parameters = new NetworkParameters
             {
-                Sizes = new List<int> { 784, 12, 12, 10 },
-                MiniBatchSize = 1000,
-                Epochs = 3,
-                LearningRate = 0.3,
+                Sizes = new List<int> { 784, 16, 10 },
+                MiniBatchSize = 10,
+                Epochs = 30,
+                LearningRate = 3,
             };
             var test = new Network(parameters);
+            test.SGD();
+            test.EvaluateNetwork();
         }
     }
 }

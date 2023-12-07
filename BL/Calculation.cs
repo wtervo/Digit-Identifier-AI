@@ -13,10 +13,10 @@ namespace BL
     /// </summary>
     public class Calculation
     {
-        public List<Matrix<double>> Biases { get; set; }
-        public List<Matrix<double>> Weights { get; set; }
-        public int LayersAmount { get; set; }
-        public double LearningRate { get; set; }
+        private List<Matrix<double>> Biases { get; set; }
+        private List<Matrix<double>> Weights { get; set; }
+        private int LayersAmount { get; set; }
+        private double LearningRate { get; set; }
 
         public Calculation(List<Matrix<double>> biases, List<Matrix<double>> weights, int layersAmount, double learningRate)
         {
@@ -27,21 +27,41 @@ namespace BL
         }
 
         /// <summary>
+        /// Return network's (updated) biases and weights
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<List<Matrix<double>>, List<Matrix<double>>> GetTrainingData()
+        {
+            return Tuple.Create(Biases, Weights);
+        }
+
+        /// <summary>
+        /// Transforms a numeric value between 0-9 to a matrix that the network can properly utilize when learning.
+        /// For example, number "5" is transformed into column matrix [0,0,0,0,0,1,0,0,0,0]
+        /// </summary>
+        /// <param name="actualValue"></param>
+        /// <returns></returns>
+        private static Matrix<double> ActualValueToMatrix(int actualValue)
+        {
+            var returnMatrix = Matrix<double>.Build.Dense(10, 1);
+            returnMatrix[actualValue, 0] = 1;
+
+            return returnMatrix;
+        }
+
+        /// <summary>
         /// Update weights and biases of the input mini batch with the help of backpropagation
         /// </summary>
         /// <param name="miniBatch"></param>
-        /// <param name="biases"></param>
-        /// <param name="weights"></param>
-        /// <param name="learningRate"></param>
         public void UpdateMiniBatch(List<Tuple<Matrix<double>, int>> miniBatch)
         {
-            // Initialized as zeroes. Updates as the algorithm learns
+            // Initialized as zeroes. Updates as the batch's backpropagation progresses
             var nablaB = Initialize.ZeroMatrices(Biases);
             var nablaW = Initialize.ZeroMatrices(Weights);
 
             for (var i = 0; i < miniBatch.Count;  i++)
             {
-                var nablas = BackPropagation(miniBatch[i].Item1, miniBatch[i].Item2);
+                var nablas = BackPropagation(miniBatch[i].Item1, ActualValueToMatrix(miniBatch[i].Item2));
 
                 var deltaNablaB = nablas.Item1;
                 var deltaNablaW = nablas.Item2;
@@ -83,7 +103,7 @@ namespace BL
         /// <param name="dataPoints"></param>
         /// <param name="actualValue"></param>
         /// <returns></returns>
-        private Tuple<List<Matrix<double>>, List<Matrix<double>>> BackPropagation(Matrix<double> dataPoints, int actualValue)
+        private Tuple<List<Matrix<double>>, List<Matrix<double>>> BackPropagation(Matrix<double> dataPoints, Matrix<double> actualValue)
         {
             var activation = dataPoints;
             var activations = new List<Matrix<double>> { activation };
@@ -92,7 +112,7 @@ namespace BL
 
             var zVectors = new List<Matrix<double>>();
 
-            for (var i = 0; i < nablaB.Count; i++)
+            for (var i = 0; i < Biases.Count; i++)
             {
                 var z = Weights[i] * activation + Biases[i];
                 zVectors.Add(z);
@@ -126,7 +146,7 @@ namespace BL
         /// <returns></returns>
         private static double Sigmoid(double z)
         {
-            return 1.0 / (1.0 + Math.Exp(z));
+            return 1.0 / (1.0 + Math.Exp(-z));
         }
 
         /// <summary>
@@ -136,7 +156,7 @@ namespace BL
         /// <returns></returns>
         private static double SigmoidDerivative(double z)
         {
-            return Sigmoid(z) * (1 - Sigmoid(z));
+            return Sigmoid(z) * (1.0 - Sigmoid(z));
         }
 
         /// <summary>
@@ -158,6 +178,48 @@ namespace BL
 
             var returnMatrix = Matrix<double>.Build;
             return returnMatrix.Dense(productList.Count, 1, productList.ToArray());
+        }
+
+        /// <summary>
+        /// Calculate network's performance against the test data set
+        /// </summary>
+        public int Evaluate(List<Tuple<Matrix<double>, int>> testData)
+        {
+            var activationPairList = new List<Tuple<int, int>>();
+
+            for (var i = 0; i < testData.Count; i++)
+            {
+                var activations = FindActivations(testData[i].Item1).ToColumnArrays();
+                var chosenOutput = Array.IndexOf(activations[0], activations[0].Max());
+                activationPairList.Add(Tuple.Create(chosenOutput, testData[i].Item2));
+            }
+
+            var correctActivations = 0;
+
+            foreach (var pair in activationPairList)
+            {
+                if (pair.Item1 == pair.Item2) correctActivations++;
+            }
+
+            return correctActivations;
+        }
+
+        /// <summary>
+        /// Find neuron activations for each layer, starting from input layer
+        /// </summary>
+        /// <param name="imageActivations"></param>
+        /// <returns></returns>
+        private Matrix<double> FindActivations(Matrix<double> imageActivations)
+        {
+            var activations = imageActivations;
+
+            for (var i = 0; i < Biases.Count; i++)
+            {
+                activations = (Weights[i] * activations + Biases[i]).Map(Sigmoid);
+            }
+
+            // Output layer activations
+            return activations;
         }
     }
 }

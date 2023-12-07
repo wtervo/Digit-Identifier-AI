@@ -14,7 +14,7 @@ namespace BL
     public static class Initialize
     {
         // Standard mean deviation function for random value generation
-        private static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 1.0);
+        private static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 0.5);
 
         /// <summary>
         /// Randomly generate initial neuron biases and insert them into required matrices
