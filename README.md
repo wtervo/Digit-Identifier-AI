@@ -1,4 +1,4 @@
-A tool to recognize handwritten digits, i.e. the "Hello world!" of neural networks, .
+A tool to recognize handwritten digits, i.e. the "Hello world!" of neural networks.
 
 Based on the wonderful book, Neural Networks and Deep Learning, by Michael Nielsen: http://neuralnetworksanddeeplearning.com/. Mostly chapters 1 & 2.
 Author's original Python code can be found here: https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/src/network.py

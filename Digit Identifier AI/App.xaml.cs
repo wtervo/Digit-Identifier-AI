@@ -21,8 +21,8 @@ namespace Digit_Identifier_AI
             base.OnStartup(e);
             var parameters = new NetworkParameters
             {
-                Sizes = new List<int> { 784, 16, 10 },
-                MiniBatchSize = 10,
+                Sizes = new List<int> { 784, 25, 25, 10 },
+                MiniBatchSize = 20,
                 Epochs = 30,
                 LearningRate = 3,
             };

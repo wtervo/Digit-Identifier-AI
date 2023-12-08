@@ -105,7 +105,7 @@ namespace BL
         /// <returns></returns>
         private Tuple<List<Matrix<double>>, List<Matrix<double>>> BackPropagation(Matrix<double> dataPoints, Matrix<double> actualValue)
         {
-            var activation = dataPoints;
+            var activation = dataPoints / 255;
             var activations = new List<Matrix<double>> { activation };
             var nablaB = Initialize.ZeroMatrices(Biases);
             var nablaW = Initialize.ZeroMatrices(Weights);

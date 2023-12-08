@@ -14,7 +14,8 @@ namespace BL
     public static class Initialize
     {
         // Standard mean deviation function for random value generation
-        private static Normal Distribution { get; } = Normal.WithMeanStdDev(0.5, 0.5);
+        private static Normal WeightDistribution { get; } = Normal.WithMeanStdDev(0, 0.5);
+        private static Normal BiasDistribution { get; } = Normal.WithMeanStdDev(0.5, 0.5);
 
         /// <summary>
         /// Randomly generate initial neuron biases and insert them into required matrices
@@ -27,7 +28,7 @@ namespace BL
 
             foreach (int size in sizes.Skip(1).Take(sizes.Count - 1))
             {
-                biases.Add(Matrix<double>.Build.Random(size, 1, Distribution));
+                biases.Add(Matrix<double>.Build.Random(size, 1, BiasDistribution));
             }
 
             return biases;
@@ -44,7 +45,7 @@ namespace BL
 
             for (int i = 1; i < sizes.Count; i++)
             {
-                weights.Add(Matrix<double>.Build.Random(sizes[i], sizes[i - 1], Distribution));
+                weights.Add(Matrix<double>.Build.Random(sizes[i], sizes[i - 1], WeightDistribution));
             }
 
             return weights;
