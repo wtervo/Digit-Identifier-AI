@@ -1,0 +1,10 @@
+export const minHiddenLayers = 1;
+export const maxHiddenLayers = 10;
+export const minHiddenLayerNeurons = 1;
+export const maxHiddenLayerNeurons = 25;
+export const minMinibatchSize = 1;
+export const maxMinibatchSize = 50;
+export const minEpochs = 1;
+export const maxEpochs = 50;
+export const minLearningRate = 0.1;
+export const maxLearningRate = 30;
