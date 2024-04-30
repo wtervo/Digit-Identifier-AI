@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React from "react";
 
 interface IControlButtonProps {
   readonly name: string;
@@ -13,7 +13,7 @@ const ControlButton: React.FC<
   const { name, path, title, ...rest } = props;
   const { onClick } = rest;
 
-  const className = classNames('control', name);
+  const className = classNames("control", name);
 
   return (
     <div

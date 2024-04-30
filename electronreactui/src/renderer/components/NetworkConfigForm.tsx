@@ -1,4 +1,6 @@
-import React, {FormEventHandler, useState} from "react";
+import React, { useState } from "react";
+import NetworkParameters from "@src/models/NetworkParameters";
+import { postInitializeNetwork } from "../../services/networkService";
 import { minHiddenLayers,
   maxHiddenLayers,
   minHiddenLayerNeurons,
@@ -10,28 +12,21 @@ import { minHiddenLayers,
   minLearningRate,
   maxLearningRate } from "@src/constants/network";
 
-interface FormData {
-  layers: number,
-  layerNeurons: Array<number>,
-  minibatchSize: number,
-  epochs: number,
-  learningRate: number
-}
-
-const defaultValues: FormData = {
-  layers: 0,
-  layerNeurons: [],
+const defaultValues: NetworkParameters = {
+  layers: [],
   minibatchSize: 0,
   epochs: 0,
-  learningRate: 0
+  learningRate: 0,
+  evaluateAfterEachEpoch: false
 }
 
 const NetworkConfigForm = () => {
-  const [formData, setFormData] = useState<FormData>(defaultValues);
+  const [networkParameters, setNetworkParameters] = useState<NetworkParameters>(defaultValues);
   const [erros, setErrors] = useState({});
   
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    postInitializeNetwork(networkParameters);
   };
   
   const onInputChange = (event: { target: HTMLInputElement; }) => {
@@ -39,26 +34,26 @@ const NetworkConfigForm = () => {
 
     if (name.includes("layerNeurons")) {
       const index = parseInt(name.slice(-1));
-      const newArr = formData.layerNeurons;
+      const newArr = networkParameters.layers;
       newArr[index] = parseInt(value);
-      setFormData({...formData, layerNeurons: newArr});
+      setNetworkParameters({...networkParameters, layers: newArr});
     } else if (name === "layers") {
       const intValue = parseInt(value);
-      const zeroArray = new Array<number>(intValue).fill(1);
-      setFormData({...formData, layerNeurons: zeroArray, layers: intValue});
+      const layerArray = new Array<number>(intValue).fill(1);
+      setNetworkParameters({...networkParameters, layers: layerArray});
     } else {
-      setFormData({...formData, [name]: value});
+      setNetworkParameters({...networkParameters, [name]: value});
     }
   };
 
   const hiddenLayerNeurons = () => {
     const inputArray = [];
 
-    for (let i = 0; i < formData.layers; i++) {
+    for (let i = 0; i < networkParameters.layers.length; i++) {
       inputArray.push(
         <>
-          <label>{"Layer " + (i + 1) + ": "}</label>
-          <input key={i} type="number" name={"layerNeurons" + i} value={formData.layerNeurons[i]}
+          <label>{"HL " + (i + 1) + ": "}</label>
+          <input key={i} type="number" name={"layerNeurons" + i} value={networkParameters.layers[i]}
             min={minHiddenLayerNeurons} max={maxHiddenLayerNeurons} onChange={onInputChange} />
           <br />
         </>)
@@ -71,37 +66,42 @@ const NetworkConfigForm = () => {
     <>
       <form onSubmit={handleSubmit}>
         <fieldset>
-          <label>Layers: </label>
-          <input type="number" name="layers" value={formData.layers} min={minHiddenLayers}
+          <label>Hidden Layers: </label>
+          <input type="number" name="layers" value={networkParameters.layers.length} min={minHiddenLayers}
             max={maxHiddenLayers} onChange={onInputChange} />
-          {formData.layers > 0 && 
+          {networkParameters.layers.length > 0 && 
             <>
               <br /><br />
-              <label>Hidden layer neurons:</label><br />
+              <label>Hidden Layer Neurons:</label><br />
               {hiddenLayerNeurons()}
             </>
           }
         </fieldset>
         <fieldset>
           <label>Minibatches: </label>
-          <input type="number" name="minibatchSize" value={formData.minibatchSize} min={minMinibatchSize}
+          <input type="number" name="minibatchSize" value={networkParameters.minibatchSize} min={minMinibatchSize}
             max={maxMinibatchSize} onChange={onInputChange} />
         </fieldset>
         <fieldset>
           <label>Epochs: </label>
-          <input type="number" name="epochs" value={formData.epochs} min={minEpochs}
+          <input type="number" name="epochs" value={networkParameters.epochs} min={minEpochs}
             max={maxEpochs} onChange={onInputChange} />
         </fieldset>
         <fieldset>
-          <label>Learning rate: </label>
-          <input type="number" step="0.1" name="learningRate" value={formData.learningRate} min={minLearningRate}
+          <label>Learning Rate: </label>
+          <input type="number" step="0.1" name="learningRate" value={networkParameters.learningRate} min={minLearningRate}
             max={maxLearningRate} onChange={onInputChange} />
         </fieldset>
+        <fieldset>
+          <label>Evaluate After Each Epoch</label>
+          <input type="checkbox" name="evaluateAfterEachEpoch" checked={networkParameters.evaluateAfterEachEpoch}
+            onChange={onInputChange}/><br />
+          <label><b>Note: This will make the training last much longer</b></label>
+        </fieldset>
         <button type="submit">Submit</button>
-        <button onClick={() => setFormData(defaultValues)}>Reset</button>
+        <button onClick={() => setNetworkParameters(defaultValues)}>Reset</button>
       </form>
-      <p>{formData.layers}</p>
-      <p>{...formData.layerNeurons}</p>
+      <p>{networkParameters.layers}</p>
     </>
   )
 }

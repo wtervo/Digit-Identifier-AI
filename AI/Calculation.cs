@@ -13,8 +13,8 @@ namespace AI
     /// </summary>
     public class Calculation
     {
-        private List<Matrix<double>> Biases { get; set; }
-        private List<Matrix<double>> Weights { get; set; }
+        public List<Matrix<double>> Biases { get; set; }
+        public List<Matrix<double>> Weights { get; set; }
         private int LayersAmount { get; set; }
         private double LearningRate { get; set; }
 

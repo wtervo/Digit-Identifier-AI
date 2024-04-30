@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import '@styles/app.scss';
-import NetworkConfigForm from './NetworkConfigForm';
+import React, { useEffect, useState } from "react";
+import "@styles/app.scss";
+import NetworkConfigForm from "./NetworkConfigForm";
 
 const Application: React.FC = () => {
   const [darkTheme, setDarkTheme] = useState(true);
@@ -9,7 +9,7 @@ const Application: React.FC = () => {
    * On component mount
    */
   useEffect(() => {
-    const useDarkTheme = parseInt(localStorage.getItem('dark-mode'));
+    const useDarkTheme = parseInt(localStorage.getItem("dark-mode"));
     if (isNaN(useDarkTheme)) {
       setDarkTheme(true);
     } else if (useDarkTheme == 1) {
@@ -24,11 +24,11 @@ const Application: React.FC = () => {
    */
   useEffect(() => {
     if (darkTheme) {
-      localStorage.setItem('dark-mode', '1');
-      document.body.classList.add('dark-mode');
+      localStorage.setItem("dark-mode", "1");
+      document.body.classList.add("dark-mode");
     } else {
-      localStorage.setItem('dark-mode', '0');
-      document.body.classList.remove('dark-mode');
+      localStorage.setItem("dark-mode", "0");
+      document.body.classList.remove("dark-mode");
     }
   }, [darkTheme]);
 
@@ -45,7 +45,7 @@ const Application: React.FC = () => {
       <div className='footer'>
         <div className='center'>
           <button onClick={toggleTheme}>
-            {darkTheme ? 'Light Theme' : 'Dark Theme'}
+            {darkTheme ? "Light Theme" : "Dark Theme"}
           </button>
         </div>
       </div>
