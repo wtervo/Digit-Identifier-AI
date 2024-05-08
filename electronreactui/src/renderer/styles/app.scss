@@ -94,11 +94,16 @@ button {
   outline: none;
   min-width: 140px;
 
-  &:hover {
+  &:disabled {
+    color: var(--button-color-disabled);
+    cursor: not-allowed;
+  }
+
+  &:hover:not([disabled]) {
     background: var(--button-hover-bgcolor);
   }
 
-  &:active {
+  &:active:not([disabled]) {
     background: var(--button-active-bgcolor);
   }
 

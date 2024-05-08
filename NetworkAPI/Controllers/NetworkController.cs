@@ -9,26 +9,21 @@ namespace NetworkAPI.Controllers
     [Route("api/[controller]")]
     public class NetworkController : ControllerBase
     {
-        private NetworkFacade? NetworkFacade { get; set; } 
-
-        // TODO: Implement network GUIDs to controller and all other levels
-
         [HttpPost]
         [Route("InitializeNetwork")]
         public ActionResult<Guid> InitializeNetwork(NetworkParameters parameters)
         {
-            NetworkFacade = new NetworkFacade(parameters);
+            var networkID = NetworkFacade.AddNetwork(parameters);
 
             Response.StatusCode = StatusCodes.Status201Created;
-            return NetworkFacade.NetworkID;
+            return networkID;
         }
 
         [HttpPost]
         [Route("TrainNetwork")]
-        public ActionResult<string> TrainNetwork()
+        public ActionResult<string> TrainNetwork(Guid networkID)
         {
-            CheckIfNetworkInitialized();
-            NetworkFacade?.TrainNetwork();
+            NetworkFacade.TrainNetwork(networkID);
 
             Response.StatusCode = StatusCodes.Status202Accepted;
             return "Network training started";
@@ -36,30 +31,29 @@ namespace NetworkAPI.Controllers
 
         [HttpPost]
         [Route("EvaluateNetwork")]
-        public ActionResult EvaluateNetwork()
+        public ActionResult EvaluateNetwork(Guid networkID)
         {
-            CheckIfNetworkInitialized();
-            NetworkFacade?.EvaluateNetwork();
+            NetworkFacade.EvaluateNetwork(networkID);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("NetworkCurrentStatus")]
-        public ActionResult NetworkCurrentStatus()
+        public ActionResult NetworkCurrentStatus([FromQuery] Guid networkID)
         {
-            CheckIfNetworkInitialized();
-            var status = NetworkFacade?.NetworkCurrentStatus();
+            var status = NetworkFacade.NetworkCurrentStatus(networkID);
 
             return Ok(status);
         }
 
-        private void CheckIfNetworkInitialized() 
+        [HttpDelete]
+        [Route("RemoveNetwork")]
+        public ActionResult RemoveNetwork(Guid networkID)
         {
-            if (NetworkFacade == null)
-            {
-                throw new Exception("Network is yet to be initialized. Pass network parameters before attempting any operations with the network.");
-            }
+            NetworkFacade.RemoveNetwork(networkID);
+
+            return Ok("Network removed");
         }
     }
 }

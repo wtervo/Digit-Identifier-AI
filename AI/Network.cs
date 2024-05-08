@@ -5,27 +5,19 @@ using System.Diagnostics;
 namespace AI
 {
     /// <summary>
-    /// Network training and testing
+    /// Network training and evaluation
     /// </summary>
-    public class Network
+    public class Network : NetworkInfo
     {
-        private List<int> Layers { get; set; }
         private int LayersAmount { get; set; }
-        private List<Matrix<double>> Biases { get; set; } = new List<Matrix<double>>();
-        private List<Matrix<double>> Weights { get; set; } = new List<Matrix<double>>();
-        private int Epochs { get; set; }
-        private int MiniBatchSize { get; set; }
-        private double LearningRate { get; set; }
-        private bool EvaluateAfterEachEpoch { get; set; }
         private MnistData MnistData { get; set; }
         private Calculation Calculation { get; set; }
-        public string Progress { get; set; } = "";
-        public NetworkCurrentStatus Status { get; set; } = NetworkCurrentStatus.Initialized;
 
         public Network(NetworkParameters parameters)
         {
             ValidateParameters(parameters);
 
+            ID = Guid.NewGuid();
             Layers = parameters.Layers; // Array of number of neurons in each layer
             LayersAmount = Layers.Count;
             Biases = Initialize.Biases(Layers);
@@ -36,6 +28,8 @@ namespace AI
             EvaluateAfterEachEpoch = parameters.EvaluateAfterEachEpoch;
             MnistData = new MnistData();
             Calculation = new Calculation(Biases, Weights, LayersAmount, LearningRate);
+            Progress = "";
+            Status = NetworkCurrentStatus.Initialized;
         }
 
         /// <summary>
@@ -93,21 +87,13 @@ namespace AI
         }
 
         /// <summary>
-        /// Validates network input parameters and raises errors when necessary
+        /// Checks network's current status and returns relevant, involving data
         /// </summary>
-        /// <param name="parameters"></param>
-        private static void ValidateParameters(NetworkParameters parameters)
+        /// <returns></returns>
+        public NetworkInfo NetworkStatus()
         {
-            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
-            if (parameters.Layers.Count < 3) throw new Exception("Incorrect layers: at least one hidden layer is required");
-            if (parameters.Layers[0] != 784) throw new Exception($"Incorrect input layer dimension. Was: {parameters.Layers[0]}");
-            if (parameters.Layers[^1] != 10) throw new Exception($"Incorrect output layer dimension. Was: {parameters.Layers[^1]}");
-        }
-
-        public NetworkStatus NetworkStatus()
-        {
-            var biases = new List<Matrix<double>>();
-            var weights = new List<Matrix<double>>();
+            List<Matrix<double>> biases;
+            List<Matrix<double>> weights;
 
             if (Status == NetworkCurrentStatus.Training)
             {
@@ -120,15 +106,34 @@ namespace AI
                 weights = Weights;
             }
 
-            var status = new NetworkStatus
+            var status = new NetworkInfo
             {
+                ID = ID,
+                Layers = Layers,
+                Epochs = Epochs,
+                MiniBatchSize = MiniBatchSize,
+                LearningRate = LearningRate,
+                EvaluateAfterEachEpoch = EvaluateAfterEachEpoch,
                 Status = Status,
                 Progress = Progress,
-                Biases = Biases,
-                Weights = Biases
+                Biases = biases,
+                Weights = weights
             };
 
             return status;
         }
+
+        /// <summary>
+        /// Validates network input parameters and raises errors when necessary
+        /// </summary>
+        /// <param name="parameters"></param>
+        private static void ValidateParameters(NetworkParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            if (parameters.Layers.Count < 3) throw new Exception("Incorrect layers: at least one hidden layer is required");
+            if (parameters.Layers[0] != 784) throw new Exception($"Incorrect input layer dimension. Was: {parameters.Layers[0]}");
+            if (parameters.Layers[^1] != 10) throw new Exception($"Incorrect output layer dimension. Was: {parameters.Layers[^1]}");
+        }
+
     }
 }

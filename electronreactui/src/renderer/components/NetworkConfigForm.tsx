@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import NetworkParameters from "@src/models/NetworkParameters";
-import { postInitializeNetwork } from "../../services/networkService";
+import { getNetworkCurrentStatus, postInitializeNetwork } from "../../services/networkService";
+import { useGridContext } from "@src/context/GridContext";
 import { minHiddenLayers,
   maxHiddenLayers,
   minHiddenLayerNeurons,
@@ -11,6 +12,8 @@ import { minHiddenLayers,
   maxEpochs,
   minLearningRate,
   maxLearningRate } from "@src/constants/network";
+import { maxLoadedNetworks } from "@src/constants/ui";
+import Network from "@src/models/Network";
 
 const defaultValues: NetworkParameters = {
   layers: [],
@@ -20,13 +23,25 @@ const defaultValues: NetworkParameters = {
   evaluateAfterEachEpoch: false
 }
 
-const NetworkConfigForm = () => {
+interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+  key: string
+}
+
+const NetworkConfigForm = React.forwardRef<HTMLDivElement, ComponentProps>(
+  ({ style, className, children, key, ...restOfProps }, ref) => {
   const [networkParameters, setNetworkParameters] = useState<NetworkParameters>(defaultValues);
-  const [erros, setErrors] = useState({});
-  
+  const gridContext = useGridContext();
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    postInitializeNetwork(networkParameters);
+    gridContext.setIsLoading(true);
+    postInitializeNetwork(networkParameters).then((networkId: string) => {
+      getNetworkCurrentStatus(networkId).then((data: Network) => {
+        gridContext.setCurrentNetwork(data);
+        gridContext.setLoadedNetworks([...gridContext.loadedNetworks, data]);
+        if (gridContext.loadedNetworks.length < maxLoadedNetworks) gridContext.setIsLoading(false);
+      })
+    });
   };
   
   const onInputChange = (event: { target: HTMLInputElement; }) => {
@@ -41,6 +56,8 @@ const NetworkConfigForm = () => {
       const intValue = parseInt(value);
       const layerArray = new Array<number>(intValue).fill(1);
       setNetworkParameters({...networkParameters, layers: layerArray});
+    } else if (name === "evaluateAfterEachEpoch") {
+      setNetworkParameters({...networkParameters, evaluateAfterEachEpoch: !networkParameters.evaluateAfterEachEpoch});
     } else {
       setNetworkParameters({...networkParameters, [name]: value});
     }
@@ -51,19 +68,25 @@ const NetworkConfigForm = () => {
 
     for (let i = 0; i < networkParameters.layers.length; i++) {
       inputArray.push(
-        <>
+        <div key={i}>
           <label>{"HL " + (i + 1) + ": "}</label>
-          <input key={i} type="number" name={"layerNeurons" + i} value={networkParameters.layers[i]}
+          <input type="number" name={"layerNeurons" + i} value={networkParameters.layers[i]}
             min={minHiddenLayerNeurons} max={maxHiddenLayerNeurons} onChange={onInputChange} />
           <br />
-        </>)
+        </div>)
     }
 
     return inputArray;
-  }
-  
+  };
+
   return (
-    <>
+    <div
+      style={{ ...style }}
+      // className={["classes you wish to apply", className].join(' ')}
+      key={key}
+      {...restOfProps}
+      ref={ref}
+    >
       <form onSubmit={handleSubmit}>
         <fieldset>
           <label>Hidden Layers: </label>
@@ -98,12 +121,12 @@ const NetworkConfigForm = () => {
             onChange={onInputChange}/><br />
           <label><b>Note: This will make the training last much longer</b></label>
         </fieldset>
-        <button type="submit">Submit</button>
-        <button onClick={() => setNetworkParameters(defaultValues)}>Reset</button>
+        <button type="submit" disabled={gridContext.isLoading || gridContext.loadedNetworks.length === maxLoadedNetworks}>Submit</button>
+        <button onClick={() => setNetworkParameters(defaultValues)}>Reset</button><br />
       </form>
-      <p>{networkParameters.layers}</p>
-    </>
-  )
-}
+      {gridContext.loadedNetworks.length === maxLoadedNetworks && <p>Maximum amount of networks loaded. Up to {maxLoadedNetworks} can be loaded at a time.</p>}
+    </div>
+  );
+});
 
 export default NetworkConfigForm;

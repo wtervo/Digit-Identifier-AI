@@ -8,6 +8,7 @@
 
 body:not(.dark-mode) {
   // Application
+  --app-color: #1f1f1f;
   --app-accent-color: #27954f;
   --app-bgcolor: #e2e2e2;
 
@@ -24,6 +25,7 @@ body:not(.dark-mode) {
   --button-border: 1px solid #eaeaea;
   --button-bgcolor: #fff;
   --button-color: #424242;
+  --button-color-disabled: #8b8b8b;
   --button-shadow-color: white;
   --button-hover-bgcolor: hsl(0, 0%, 98%);
   --button-active-bgcolor: hsl(0, 0%, 96%);

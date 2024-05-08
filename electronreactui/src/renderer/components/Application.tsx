@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "@styles/app.scss";
-import NetworkConfigForm from "./NetworkConfigForm";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
+import Grid from "./Grid";
 
 const Application: React.FC = () => {
   const [darkTheme, setDarkTheme] = useState(true);
@@ -41,7 +43,7 @@ const Application: React.FC = () => {
 
   return (
     <div id='erwt'>
-      <NetworkConfigForm />
+      <Grid />
       <div className='footer'>
         <div className='center'>
           <button onClick={toggleTheme}>
