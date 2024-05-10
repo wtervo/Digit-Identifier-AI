@@ -10,8 +10,8 @@ export const postInitializeNetwork = async (netWorkParameters: NetworkParameters
 
 export const postTrainNetwork = async (networkID: string) => {
   const response = await axios.post(apiRoot + "Train", { NetworkID: networkID });
-  
-  if (response.statusCode !== 202) throw new Error("Something went wrong while attempting to initialize network training.");
+
+  if (response.status !== 202) throw new Error("Something went wrong while attempting to initialize network training.");
 };
 
 export const postEvaluateNetwork = async (networkID: string) => {
@@ -28,10 +28,20 @@ export const getNetworkCurrentStatus = async (networkID: string) => {
 
 export const getNetworkStatusAll = async () => {
   const response = await axios.get(apiRoot + "All");
+  console.log(response);
+  // 503 raised only when stop operation is not yet ready. Reattempt fetch once more.
+  if (response.status === 503) {
+    const response = await axios.get(apiRoot + "All");
+    return response.data;
+  } else {
+    return response.data;
+  }
+};
 
-  return response.data;
-}
+export const postStopNetwork = async (networkID: string) => {
+  await axios.post(apiRoot + "Stop", { NetworkID: networkID } );
+};
 
 export const postRemoveNetwork = async (networkID: string) => {
   await axios.post(apiRoot + "Remove", { NetworkID: networkID } );
-}
+};

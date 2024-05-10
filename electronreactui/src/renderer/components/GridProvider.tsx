@@ -16,7 +16,7 @@ const GridProvider: React.FC<Props> = ({children}) => {
 
   // Failsafe sync in case frontend crashes, reloads, etc. and backend still has networks in memory
   const getNetworks = async () => {
-    const networks: Array<Network> = await getNetworkStatusAll()
+    const networks: Array<Network> = await getNetworkStatusAll();
     if (networks) {
       setCurrentNetwork(networks[0]);
       setLoadedNetworks(networks);

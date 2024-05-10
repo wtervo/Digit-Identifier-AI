@@ -17,6 +17,7 @@ namespace AI
         public List<Matrix<double>> Weights { get; set; }
         private int LayersAmount { get; set; }
         private double LearningRate { get; set; }
+        public bool Stop { get; set; } = false;
 
         public Calculation(List<Matrix<double>> biases, List<Matrix<double>> weights, int layersAmount, double learningRate)
         {
@@ -62,6 +63,7 @@ namespace AI
             for (var i = 0; i < miniBatch.Count;  i++)
             {
                 var nablas = BackPropagation(miniBatch[i].Item1, ActualValueToMatrix(miniBatch[i].Item2));
+                if (Stop) break;
 
                 var deltaNablaB = nablas.Item1;
                 var deltaNablaW = nablas.Item2;
@@ -114,6 +116,7 @@ namespace AI
 
             for (var i = 0; i < Biases.Count; i++)
             {
+                if (Stop) Tuple.Create(nablaB, nablaW);
                 var z = Weights[i] * activation + Biases[i];
                 zVectors.Add(z);
                 activation = z.Map(Sigmoid);
@@ -128,6 +131,7 @@ namespace AI
 
             for (var i = 2; i < LayersAmount; i++)
             {
+                if (Stop) Tuple.Create(nablaB, nablaW);
                 var z = zVectors[^i];
                 deltaFactor1 = Weights[^(i - 1)].Transpose() * delta;
                 deltaFactor2 = z.Map(SigmoidDerivative);

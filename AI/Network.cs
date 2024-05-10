@@ -12,6 +12,7 @@ namespace AI
         private int LayersAmount { get; set; }
         private MnistData MnistData { get; set; }
         private Calculation Calculation { get; set; }
+        public bool Stop { get; set; } = false;
 
         public Network(NetworkParameters parameters)
         {
@@ -48,6 +49,7 @@ namespace AI
                 var miniBatches = Initialize.MiniBatches(trainingData, MiniBatchSize);
 
                 foreach (var miniBatch in miniBatches) Calculation.UpdateMiniBatch(miniBatch);
+                if (Stop) break;
 
                 var progress = $"{i + 1}/{Epochs}";
 
@@ -68,7 +70,15 @@ namespace AI
             Biases = trainingResults.Item1;
             Weights = trainingResults.Item2;
 
-            Status = NetworkCurrentStatus.TrainingDone;
+            if (Stop)
+            {
+                Status = NetworkCurrentStatus.Initialized;
+                Progress = "";
+                Stop = false;
+            } else
+            {
+                Status = NetworkCurrentStatus.TrainingDone;
+            }
         }
 
         /// <summary>
@@ -124,6 +134,15 @@ namespace AI
         }
 
         /// <summary>
+        /// Stops the training of a network
+        /// </summary>
+        public void StopExecution()
+        {
+            Stop = true;
+            Calculation.Stop = true;
+        }
+
+        /// <summary>
         /// Validates network input parameters and raises errors when necessary
         /// </summary>
         /// <param name="parameters"></param>
@@ -134,6 +153,5 @@ namespace AI
             if (parameters.Layers[0] != 784) throw new Exception($"Incorrect input layer dimension. Was: {parameters.Layers[0]}");
             if (parameters.Layers[^1] != 10) throw new Exception($"Incorrect output layer dimension. Was: {parameters.Layers[^1]}");
         }
-
     }
 }

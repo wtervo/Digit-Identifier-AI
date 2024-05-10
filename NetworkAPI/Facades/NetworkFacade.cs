@@ -31,7 +31,9 @@ namespace NetworkAPI.Facades
         public static void TrainNetwork(Guid networkID)
         {
             var network = FindNetwork(networkID);
-            network.SGD();
+            // This operation can take an extremely long amount of time, thus the use of Task
+            var t = new Task(network.SGD);
+            t.Start();
         }
 
         public static void EvaluateNetwork(Guid networkID)
@@ -54,6 +56,8 @@ namespace NetworkAPI.Facades
                 var currentNetworks = new List<NetworkInfo>();
                 foreach (var network in Networks)
                 {
+                    // Frontend can query current data too fast after network training has been stopped
+                    if (network.Stop) throw new InvalidOperationException("Network operation is in the middle of stopping.");
                     currentNetworks.Add(network.NetworkStatus());
                 }
 
@@ -65,6 +69,12 @@ namespace NetworkAPI.Facades
         {
             var network = FindNetwork(networkID);
             Networks.Remove(network);
+        }
+
+        public static void StopNetwork(Guid networkID)
+        {
+            var network = FindNetwork(networkID);
+            network.StopExecution();
         }
 
         private static Network FindNetwork(Guid networkID)

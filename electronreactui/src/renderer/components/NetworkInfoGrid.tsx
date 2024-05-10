@@ -2,8 +2,9 @@ import React from "react";
 import { dummyNetwork } from "@src/constants/network";
 import { useGridContext } from "@src/context/GridContext";
 import { NetworkCurrentStatus } from "@src/models/enums";
-import { postEvaluateNetwork, postRemoveNetwork, postTrainNetwork } from "@src/services/networkService";
+import { getNetworkStatusAll, postEvaluateNetwork, postRemoveNetwork, postStopNetwork, postTrainNetwork } from "@src/services/networkService";
 import { Responsive, WidthProvider } from "react-grid-layout";
+import Network from "@src/models/Network";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -26,7 +27,8 @@ const responsiveProps = {
       { i: "item8", x: 0, y: 3, w: 1, h: 1},
       { i: "item9", x: 1, y: 3, w: 1, h: 1},
       { i: "item10", x: 0, y: 4, w: 1, h: 1},
-      { i: "item11", x: 1, y: 4, w: 1, h: 1}
+      { i: "item11", x: 1, y: 4, w: 1, h: 1},
+      { i: "item12", x: 3, y: 0, w: 1, h: 1}
     ]
   }
 };
@@ -38,13 +40,23 @@ const NetworkInfoGrid = () => {
 
   const trainingOnClick = async () => {
     await postTrainNetwork(currentNetwork.id);
+    gridContext.setIsLoading(true);
     console.log("Training started");
   };
 
   const evaluateOnClick = async () => {
     await postEvaluateNetwork(currentNetwork.id);
     console.log("Evaluation started");
-  }
+  };
+
+  const stopOnClick = async () => {
+    await postStopNetwork(currentNetwork.id);
+    // Update frontend data to latest to avoid discrepancy
+    const networks: Array<Network> = await getNetworkStatusAll();
+    gridContext.setCurrentNetwork(networks.find(network => network.id === currentNetwork.id));
+    gridContext.setIsLoading(false);
+    console.log("Training stopped");
+  };
 
   const removeNetwork = async () => {
     await postRemoveNetwork(currentNetwork.id);
@@ -62,9 +74,17 @@ const NetworkInfoGrid = () => {
   return (
     <div>
       <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
-        <button key="item1" title="Starts training the network with the input parameters. This may take a long time." disabled={gridContext.isLoading} onClick={trainingOnClick}>Start Training</button>
-        <button key="item2" title="Evaluates the performance of the network. Evaluation can be done after the network has been trained." disabled={gridContext.isLoading || !canBeEvaluated} onClick={evaluateOnClick}>Evaluate</button>
-        <button key="item3" title="Removes the network. This cannot be undone." disabled={gridContext.isLoading} onClick={removeNetwork}>Delete</button>
+        <button key="item1" title="Starts training the network with the input parameters. This may take a long time."
+          disabled={gridContext.isLoading} onClick={trainingOnClick}>Start Training
+        </button>
+        <button key="item2" title="Evaluates the performance of the network. Evaluation can be done after the network has been trained."
+          disabled={gridContext.isLoading || !canBeEvaluated} onClick={evaluateOnClick}>Evaluate
+        </button>
+        <button key="item3" title="Removes the network. This cannot be undone." disabled={gridContext.isLoading}
+          onClick={removeNetwork}>Delete
+        </button>
+        {/* {currentNetwork.status === NetworkCurrentStatus.Training && <button key="item12" title="Stops the training of the network" onClick={stopOnClick}>Stop</button>} */}
+        <button key="item12" title="Stops the training of the network" onClick={stopOnClick}>Stop</button>
         <p className="network-info-grid-item" key="item4">{`Name: Dummy Name`} &emsp; &emsp; {`ID: ${currentNetwork.id}`}</p>
         <p className="network-info-grid-item" key="item5">Layers: {currentNetwork.layers.join(" ")}</p>
         <p className="network-info-grid-item" key="item6">Epochs: {currentNetwork.epochs}</p>
@@ -72,7 +92,9 @@ const NetworkInfoGrid = () => {
         <p className="network-info-grid-item" key="item8">Learning Rate: {currentNetwork.learningRate}</p>
         <p className="network-info-grid-item" key="item9">Evaluate After Each Epoch: {currentNetwork.evaluateAfterEachEpoch.toString()}</p>
         <p className="network-info-grid-item" key="item10">Network Status: <b>{NetworkCurrentStatus[currentNetwork.status]}</b></p>
-        <p className="network-info-grid-item" key="item11">Progress: <b>{currentNetwork.progress !== "" ? currentNetwork.progress : "Training not started"}</b></p>
+        <p className="network-info-grid-item" key="item11">Progress:
+          <b>{currentNetwork.progress !== "" ? currentNetwork.progress : "Training not started"}</b>
+        </p>
       </ResponsiveGridLayout>
     </div>
   );

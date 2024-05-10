@@ -54,6 +54,7 @@ export function createAppWindow(): BrowserWindow {
       const { requestHeaders } = details;
       UpsertKeyValue(requestHeaders, "Access-Control-Allow-Origin", ["*"]);
       UpsertKeyValue(requestHeaders, "Access-Control-Allow-Headers", ["*"]);
+      UpsertKeyValue(requestHeaders, "Access-Control-Allow-Methods", ["GET,HEAD,POST,OPTIONS,PUT,DELETE"]);
       callback({ requestHeaders });
     },
   );
@@ -61,6 +62,7 @@ export function createAppWindow(): BrowserWindow {
   appWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     const { responseHeaders } = details;
     UpsertKeyValue(responseHeaders, "Access-Control-Allow-Origin", ["*"]);
+    UpsertKeyValue(responseHeaders, "Access-Control-Allow-Headers", ["*"]);
     UpsertKeyValue(responseHeaders, "Access-Control-Allow-Methods", ["GET,HEAD,POST,OPTIONS,PUT,DELETE"]);
     callback({
       responseHeaders,
