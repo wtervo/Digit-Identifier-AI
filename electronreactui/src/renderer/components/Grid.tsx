@@ -12,16 +12,23 @@ const responsiveProps = {
   breakpoints: { lg: 1200, md: 960, sm: 720, xs: 480, xxs: 0 },
   cols: { lg: 12, md: 8, sm: 8, xs: 4, xxs: 4 },
   isDraggable: false,
+  isResizable: false,
   layouts: {
-    lg: [{ i: "item1", x: 0, y: 0, w: 2, h: 1},
-        { i: "item2", x: 0, y: 1, w: 9, h: 1},
-        { i: "item3", x: 12, y: 0, w: 3, h: 4}],
-    md: [{ i: "item1", x: 0, y: 0, w: 2, h: 1},
-        { i: "item2", x: 0, y: 1, w: 6, h: 1},
-        { i: "item3", x: 12, y: 0, w: 2, h: 4}],
-    xs: [{ i: "item1", x: 0, y: 0, w: 1, h: 1},
-        { i: "item2", x: 0, y: 1, w: 3, h: 1},
-        { i: "item3", x: 12, y: 0, w: 1, h: 4}],
+    lg: [
+      { i: "item1", x: 0, y: 0, w: 9, h: 1},
+      { i: "item2", x: 0, y: 1, w: 9, h: 1},
+      { i: "item3", x: 12, y: 0, w: 3, h: 4}
+    ],
+    md: [
+      { i: "item1", x: 0, y: 0, w: 6, h: 1},
+      { i: "item2", x: 0, y: 1, w: 6, h: 1},
+      { i: "item3", x: 12, y: 0, w: 2, h: 4}
+    ],
+    xs: [
+      { i: "item1", x: 0, y: 0, w: 3, h: 1},
+      { i: "item2", x: 0, y: 1, w: 3, h: 1},
+      { i: "item3", x: 12, y: 0, w: 1, h: 4}
+    ],
   }
 };
 
@@ -42,7 +49,7 @@ const Grid = () => {
 
   return(
     <GridProvider>
-      <ResponsiveGridLayout {...responsiveProps}>
+      <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
         <NetworkSelector key="item1" />
         <NetworkView key="item2" />
         <NetworkConfigForm key="item3" />

@@ -252,6 +252,43 @@ button {
   }
 }
 
+.dropdown {
+  position: absolute;
+  top: 38px;
+  left: -1px;
+  border: 1px solid rgb(197, 197, 197);
+  background: #fff;
+  padding: 0;
+  color: var(--button-color);
+  text-align: left;
+  border-radius: 0.25rem;
+  z-index: 500;
+}
+.dropdown > p {
+  margin: 0;
+  padding: 0.375rem 0.88rem;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  min-width: 140px;
+  background-color: var(--button-bgcolor);
+  z-index: 500;
+}
+.dropdown > p:hover {
+  background-color: var(--button-hover-bgcolor);
+}
+.dropdown > p:last-child {
+  border-bottom: 0 none;
+}
+
+.network-info-grid-item {
+  background: var(--network-grid-item);
+  text-align: center;
+  padding: 4px;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
 /**
  *==========================================================================
  * Titlebar Overrides for different themes

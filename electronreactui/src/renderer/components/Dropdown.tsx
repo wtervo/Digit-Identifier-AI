@@ -22,19 +22,17 @@ const DropDown: React.FC<DropDownProps> = ({ networkSelection }: DropDownProps):
   }, [showDropdown]);
 
   return (
-    <>
-      <div>
-        {gridContext.loadedNetworks.map(
-          (network: Network, index: number): JSX.Element => {
-            return (
-              <p key={index} onClick={(): void => { onClickHandler(network.id);}} >
-                {network.id}
-              </p>
-            );
-          }
-        )}
-      </div>
-    </>
+    <div className="dropdown">
+      {gridContext.loadedNetworks.map(
+        (network: Network, index: number): JSX.Element => {
+          return (
+            <p key={index} onClick={(): void => { onClickHandler(network.id);}} >
+              {network.id}
+            </p>
+          );
+        }
+      )}
+    </div>
   );
 };
 

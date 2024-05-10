@@ -46,6 +46,21 @@ namespace NetworkAPI.Facades
             return network.NetworkStatus();
         }
 
+        public static List<NetworkInfo>? NetworkStatusAll()
+        {
+            if (Networks.Count == 0) return null;
+            else
+            {
+                var currentNetworks = new List<NetworkInfo>();
+                foreach (var network in Networks)
+                {
+                    currentNetworks.Add(network.NetworkStatus());
+                }
+
+                return currentNetworks;
+            }
+        }
+
         public static void RemoveNetwork(Guid networkID)
         {
             var network = FindNetwork(networkID);

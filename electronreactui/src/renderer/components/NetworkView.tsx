@@ -1,7 +1,6 @@
-import { dummyNetwork } from "@src/constants/network";
 import { useGridContext } from "@src/context/GridContext";
-import { deleteRemoveNetwork } from "@src/services/networkService";
 import React from "react";
+import NetworkInfoGrid from "./NetworkInfoGrid";
 
 interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   key: string
@@ -10,24 +9,8 @@ interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
 const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
   ({ style, className, children, key, ...restOfProps }, ref) => {
     const gridContext = useGridContext();
-
-    const trainingOnClick = () => {
-      console.log("testing");
-    };
-
-    const removeNetwork = () => {
-      deleteRemoveNetwork(gridContext.currentNetwork.id).then(data => {
-        console.log(data);
-      });
-      const remainingNetworks = gridContext.loadedNetworks.filter(network => network !== gridContext.currentNetwork);
-      if (remainingNetworks.length === 0) {
-        gridContext.setCurrentNetwork(dummyNetwork);
-        gridContext.setLoadedNetworks([]);
-      } else {
-        gridContext.setCurrentNetwork(remainingNetworks[0]);
-      }
-    };
-
+    const currentNetwork = gridContext.currentNetwork;
+    
     return (
       <div
         style={{ ...style }}
@@ -36,11 +19,9 @@ const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
         {...restOfProps}
         ref={ref}
       >
-        <button onClick={trainingOnClick}>Start training</button>
-        <p>{gridContext.currentNetwork.id}</p><br />
-        <p>{gridContext.currentNetwork.layers.length}</p><br />
-        <p>{gridContext.currentNetwork.learningRate}</p><br />
-        <button onClick={removeNetwork}>Delete</button>
+        {currentNetwork.id !== "" &&
+          <NetworkInfoGrid />
+        }
       </div>
     );
   }

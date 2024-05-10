@@ -10,8 +10,8 @@ namespace NetworkAPI.Controllers
     public class NetworkController : ControllerBase
     {
         [HttpPost]
-        [Route("InitializeNetwork")]
-        public ActionResult<Guid> InitializeNetwork(NetworkParameters parameters)
+        [Route("Initialize")]
+        public ActionResult<Guid> Initialize(NetworkParameters parameters)
         {
             var networkID = NetworkFacade.AddNetwork(parameters);
 
@@ -20,40 +20,50 @@ namespace NetworkAPI.Controllers
         }
 
         [HttpPost]
-        [Route("TrainNetwork")]
-        public ActionResult<string> TrainNetwork(Guid networkID)
+        [Route("Train")]
+        public ActionResult<string> Train(StartOperationData data)
         {
-            NetworkFacade.TrainNetwork(networkID);
+            NetworkFacade.TrainNetwork(data.NetworkID);
 
             Response.StatusCode = StatusCodes.Status202Accepted;
             return "Network training started";
         }
 
         [HttpPost]
-        [Route("EvaluateNetwork")]
-        public ActionResult EvaluateNetwork(Guid networkID)
+        [Route("Evaluate")]
+        public ActionResult Evaluate(StartOperationData data)
         {
-            NetworkFacade.EvaluateNetwork(networkID);
+            NetworkFacade.EvaluateNetwork(data.NetworkID);
 
             return Ok();
         }
 
         [HttpGet]
-        [Route("NetworkCurrentStatus")]
-        public ActionResult NetworkCurrentStatus([FromQuery] Guid networkID)
+        [Route("CurrentStatus")]
+        public ActionResult<NetworkInfo> CurrentStatus([FromQuery] Guid networkID)
         {
             var status = NetworkFacade.NetworkCurrentStatus(networkID);
 
             return Ok(status);
         }
 
-        [HttpDelete]
-        [Route("RemoveNetwork")]
-        public ActionResult RemoveNetwork(Guid networkID)
+        [HttpGet]
+        [Route("All")]
+        public ActionResult<List<NetworkInfo>>? All()
         {
-            NetworkFacade.RemoveNetwork(networkID);
-
-            return Ok("Network removed");
+            return Ok(NetworkFacade.NetworkStatusAll());
         }
+
+        [HttpPost]
+        [Route("Remove")]
+        public void Remove(StartOperationData data)
+        {
+            NetworkFacade.RemoveNetwork(data.NetworkID);
+        }
+    }
+
+    public class StartOperationData
+    {
+        public Guid NetworkID { get; set; }
     }
 }

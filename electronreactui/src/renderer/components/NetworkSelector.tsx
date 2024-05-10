@@ -38,8 +38,8 @@ const NetworkSelector = React.forwardRef<HTMLDivElement, ComponentProps>(
       >
         {gridContext.currentNetwork.id !== "" ? 
           <div>
-            <div>Current network: </div>
-            <button onClick={(): void => toggleDropdown()}
+            <b className="title">Current network: </b>
+            <button disabled={gridContext.isLoading} onClick={(): void => toggleDropdown()}
               onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
                 dismissHandler(e)
               }
@@ -52,6 +52,7 @@ const NetworkSelector = React.forwardRef<HTMLDivElement, ComponentProps>(
                 />
               )}
             </button>
+            <hr />
           </div>
           :
           <p>Create a network</p>

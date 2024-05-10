@@ -27,7 +27,7 @@ body:not(.dark-mode) {
   --button-color: #424242;
   --button-color-disabled: #8b8b8b;
   --button-shadow-color: white;
-  --button-hover-bgcolor: hsl(0, 0%, 98%);
+  --button-hover-bgcolor: hsl(0, 0%, 80%);
   --button-active-bgcolor: hsl(0, 0%, 96%);
 
   // Titlebar
@@ -48,6 +48,9 @@ body:not(.dark-mode) {
 
   // ERWT
   --erwt-heading-color: #282828;
+
+  // Network grid item
+  --network-grid-item: #bebebe;
 
   // Overrides
   .main-teaser {

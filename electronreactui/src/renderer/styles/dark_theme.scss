@@ -31,7 +31,7 @@
   --button-color-disabled: #a0a0a0;
   --button-border: 1px solid #222424;
   --button-bgcolor: hsl(0, 0%, 22%);
-  --button-hover-bgcolor: hsl(0, 0%, 24%);
+  --button-hover-bgcolor: hsl(0, 0%, 40%);
   --button-active-bgcolor: hsl(0deg 0% 20%);
   --button-shadow-color: #00000078;
 
@@ -56,4 +56,7 @@
 
   // ERWT
   --erwt-heading-color: #ddddddec;
+
+  // Network grid item
+  --network-grid-item: #5c5c5c;
 }
