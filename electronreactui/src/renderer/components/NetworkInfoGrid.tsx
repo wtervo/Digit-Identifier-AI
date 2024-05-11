@@ -2,7 +2,7 @@ import React from "react";
 import { dummyNetwork } from "@src/constants/network";
 import { useGridContext } from "@src/context/GridContext";
 import { NetworkCurrentStatus } from "@src/models/enums";
-import { getNetworkStatusAll, postEvaluateNetwork, postRemoveNetwork, postStopNetwork, postTrainNetwork } from "@src/services/networkService";
+import { getNetworkCurrentStatus, postEvaluateNetwork, postRemoveNetwork, postStopNetwork, postTrainNetwork } from "@src/services/networkService";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import Network from "@src/models/Network";
 
@@ -33,6 +33,9 @@ const responsiveProps = {
   }
 };
 
+/**
+ * Displays basic properties of a network in a grid. Contains buttons for network operations.
+ */
 const NetworkInfoGrid = () => {
   const gridContext = useGridContext();
   const currentNetwork = gridContext.currentNetwork;
@@ -52,8 +55,12 @@ const NetworkInfoGrid = () => {
   const stopOnClick = async () => {
     await postStopNetwork(currentNetwork.id);
     // Update frontend data to latest to avoid discrepancy
-    const networks: Array<Network> = await getNetworkStatusAll();
-    gridContext.setCurrentNetwork(networks.find(network => network.id === currentNetwork.id));
+    // Data is fetched too quickly, when the backend is not yet fully stopped, so we need a delay
+    // setTimeout is a dirty solution, but I couldn't be arsed to think of a better one ¯\_(ツ)_/¯
+    setTimeout(async () => {
+      const networkData: Network = await getNetworkCurrentStatus(currentNetwork.id);
+      gridContext.setCurrentNetwork(networkData);
+    }, 1500);
     gridContext.setIsLoading(false);
     console.log("Training stopped");
   };
@@ -85,10 +92,10 @@ const NetworkInfoGrid = () => {
         </button>
         {/* {currentNetwork.status === NetworkCurrentStatus.Training && <button key="item12" title="Stops the training of the network" onClick={stopOnClick}>Stop</button>} */}
         <button key="item12" title="Stops the training of the network" onClick={stopOnClick}>Stop</button>
-        <p className="network-info-grid-item" key="item4">{`Name: Dummy Name`} &emsp; &emsp; {`ID: ${currentNetwork.id}`}</p>
+        <p className="network-info-grid-item" key="item4">{"Name: Dummy Name"} &emsp; &emsp; {`ID: ${currentNetwork.id}`}</p>
         <p className="network-info-grid-item" key="item5">Layers: {currentNetwork.layers.join(" ")}</p>
         <p className="network-info-grid-item" key="item6">Epochs: {currentNetwork.epochs}</p>
-        <p className="network-info-grid-item" key="item7">Minibatch Size: {currentNetwork.miniBatchSize}</p>
+        <p className="network-info-grid-item" key="item7">Minibatch Size: {currentNetwork.minibatchSize}</p>
         <p className="network-info-grid-item" key="item8">Learning Rate: {currentNetwork.learningRate}</p>
         <p className="network-info-grid-item" key="item9">Evaluate After Each Epoch: {currentNetwork.evaluateAfterEachEpoch.toString()}</p>
         <p className="network-info-grid-item" key="item10">Network Status: <b>{NetworkCurrentStatus[currentNetwork.status]}</b></p>

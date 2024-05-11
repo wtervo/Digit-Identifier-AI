@@ -14,4 +14,4 @@ export const useGridContext = () => {
   }
 
   return gridData;
-}
+};

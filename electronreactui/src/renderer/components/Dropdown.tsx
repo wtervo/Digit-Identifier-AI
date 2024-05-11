@@ -1,14 +1,18 @@
 // Based on: https://codesandbox.io/p/sandbox/react-dropdown-w-typescript-example-jt4dh?file=%2Fsrc%2Fcomponents%2FDropDown.tsx%3A44%2C15
 
-import { useGridContext } from '@src/context/GridContext';
-import Network from '@src/models/Network';
-import React, { useEffect, useState } from 'react';
+import { useGridContext } from "@src/context/GridContext";
+import Network from "@src/models/Network";
+import React, { useEffect, useState } from "react";
 
 type DropDownProps = {
   showDropDown: boolean;
   networkSelection: Function;
 };
 
+/**
+ * Dropdown list of all loaded networks
+ * @param networkSelection 
+ */
 const DropDown: React.FC<DropDownProps> = ({ networkSelection }: DropDownProps): JSX.Element => {
   const gridContext = useGridContext();
   const [showDropdown, setShowDropdown] = useState(false);

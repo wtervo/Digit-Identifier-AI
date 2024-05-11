@@ -54,12 +54,6 @@ namespace NetworkAPI.Facades
             else
             {
                 var currentNetworks = new List<NetworkInfo>();
-                foreach (var network in Networks)
-                {
-                    // Frontend can query current data too fast after network training has been stopped
-                    if (network.Stop) throw new InvalidOperationException("Network operation is in the middle of stopping.");
-                    currentNetworks.Add(network.NetworkStatus());
-                }
 
                 return currentNetworks;
             }
@@ -82,6 +76,5 @@ namespace NetworkAPI.Facades
             var network = Networks.Find(network => network.ID == networkID);
             return network ?? throw new Exception("Network not found");
         }
-
     }
 }

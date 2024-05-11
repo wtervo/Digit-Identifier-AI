@@ -7,8 +7,13 @@ import Network from "@src/models/Network";
 
 interface Props {
   children: React.ReactNode
-};
+}
 
+/**
+ * Context provider component. Its states contain important data such as current network etc.
+ * which are then provided to its children.
+ * @param children 
+ */
 const GridProvider: React.FC<Props> = ({children}) => {  
   const [currentNetwork, setCurrentNetwork] = useState(dummyNetwork);
   const [loadedNetworks, setLoadedNetworks] = useState([]);
@@ -20,7 +25,7 @@ const GridProvider: React.FC<Props> = ({children}) => {
     if (networks) {
       setCurrentNetwork(networks[0]);
       setLoadedNetworks(networks);
-    };
+    }
   };
 
   useEffect(() => {

@@ -1,8 +1,8 @@
-const axios = require("axios").default
-import NetworkParameters from "@src/models/NetworkParameters";
+const axios = require("axios").default;
+import NetworkCreation from "@src/models/NetworkCreation";
 import { apiRoot } from "@src/constants/ui";
 
-export const postInitializeNetwork = async (netWorkParameters: NetworkParameters) => {
+export const postInitializeNetwork = async (netWorkParameters: NetworkCreation) => {
   const response = await axios.post(apiRoot + "Initialize", netWorkParameters);
   
   return response.data;
@@ -28,14 +28,8 @@ export const getNetworkCurrentStatus = async (networkID: string) => {
 
 export const getNetworkStatusAll = async () => {
   const response = await axios.get(apiRoot + "All");
-  console.log(response);
-  // 503 raised only when stop operation is not yet ready. Reattempt fetch once more.
-  if (response.status === 503) {
-    const response = await axios.get(apiRoot + "All");
-    return response.data;
-  } else {
-    return response.data;
-  }
+
+  return response.data; 
 };
 
 export const postStopNetwork = async (networkID: string) => {

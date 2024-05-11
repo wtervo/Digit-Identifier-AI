@@ -16,7 +16,7 @@ export const dummyNetwork: Network = {
   id: "",
   layers: [],
   epochs: 0,
-  miniBatchSize: 0,
+  minibatchSize: 0,
   learningRate: 0,
   evaluateAfterEachEpoch: false,
   status: NetworkCurrentStatus.Initialized,

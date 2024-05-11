@@ -8,6 +8,9 @@ interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   key: string
 }
 
+/**
+ * Button that acts as the root/parent of the dropdown menu
+ */
 const NetworkSelector = React.forwardRef<HTMLDivElement, ComponentProps>(
   ({ style, className, children, key, ...restOfProps }, ref) => {
     const gridContext = useGridContext();

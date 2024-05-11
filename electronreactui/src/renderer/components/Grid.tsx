@@ -32,6 +32,10 @@ const responsiveProps = {
   }
 };
 
+/**
+ * Grid for ordering and displaying everything network related. The parent component
+ * for all components involving networks, i.e. most of the program.
+ */
 const Grid = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 

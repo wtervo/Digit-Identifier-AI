@@ -6,6 +6,9 @@ interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   key: string
 }
 
+/**
+ * Parent component for everything that displays network's data
+ */
 const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
   ({ style, className, children, key, ...restOfProps }, ref) => {
     const gridContext = useGridContext();

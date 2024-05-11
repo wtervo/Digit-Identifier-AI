@@ -4,6 +4,9 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import Grid from "./Grid";
 
+/**
+ * Application's main component housing themes and network's main component
+ */
 const Application: React.FC = () => {
   const [darkTheme, setDarkTheme] = useState(true);
 

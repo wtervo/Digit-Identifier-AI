@@ -13,37 +13,65 @@ namespace NetworkAPI.Controllers
         [Route("Initialize")]
         public ActionResult<Guid> Initialize(NetworkParameters parameters)
         {
-            var networkID = NetworkFacade.AddNetwork(parameters);
+            try
+            {
+                var networkID = NetworkFacade.AddNetwork(parameters);
 
-            Response.StatusCode = StatusCodes.Status201Created;
-            return networkID;
+                Response.StatusCode = StatusCodes.Status201Created;
+                return networkID;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("Train")]
         public ActionResult<string> Train(NetworkIdentity data)
         {
-            NetworkFacade.TrainNetwork(data.NetworkID);
+            try
+            {
+                NetworkFacade.TrainNetwork(data.NetworkID);
 
-            return StatusCode(StatusCodes.Status202Accepted, "Network training started");
+                return StatusCode(StatusCodes.Status202Accepted, "Network training started");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("Evaluate")]
         public ActionResult Evaluate(NetworkIdentity data)
         {
-            NetworkFacade.EvaluateNetwork(data.NetworkID);
+            try
+            {
+                NetworkFacade.EvaluateNetwork(data.NetworkID);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
         [Route("CurrentStatus")]
         public ActionResult<NetworkInfo> CurrentStatus([FromQuery] Guid networkID)
         {
-            var status = NetworkFacade.NetworkCurrentStatus(networkID);
+            try
+            {
+                var status = NetworkFacade.NetworkCurrentStatus(networkID);
 
-            return Ok(status);
+                return Ok(status);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
@@ -54,24 +82,42 @@ namespace NetworkAPI.Controllers
             {
                 return Ok(NetworkFacade.NetworkStatusAll());
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpPost]
         [Route("Stop")]
-        public void Stop(NetworkIdentity data)
+        public ActionResult Stop(NetworkIdentity data)
         {
-            NetworkFacade.StopNetwork(data.NetworkID);
+            try
+            {
+                NetworkFacade.StopNetwork(data.NetworkID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("Remove")]
-        public void Remove(NetworkIdentity data)
+        public ActionResult Remove(NetworkIdentity data)
         {
-            NetworkFacade.RemoveNetwork(data.NetworkID);
+            try
+            {
+                NetworkFacade.RemoveNetwork(data.NetworkID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 

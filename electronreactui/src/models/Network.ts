@@ -1,13 +1,12 @@
-import { Matrix } from 'ts-matrix';
-import { NetworkCurrentStatus } from './enums';
+import { Matrix } from "ts-matrix";
+import { NetworkCurrentStatus } from "./enums";
+import NetworkCreation from "./NetworkCreation";
 
-export default interface Network {
+/**
+ * A single network's full parameters
+ */
+export default interface Network extends NetworkCreation {
     id: string,
-    layers: Array<number>,
-    epochs: number,
-    miniBatchSize: number,
-    learningRate: number,
-    evaluateAfterEachEpoch: boolean,
     status: NetworkCurrentStatus,
     progress: string,
     biases: Array<Matrix>,
