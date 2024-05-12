@@ -57,18 +57,18 @@ namespace AI
         /// better learning.
         /// </summary>
         /// <param name="trainingData"></param>
-        /// <param name="miniBatchSize"></param>
+        /// <param name="minibatchSize"></param>
         /// <returns></returns>
-        public static List<List<Tuple<Matrix<double>, int>>> MiniBatches(List<Tuple<Matrix<double>, int>> trainingData, int miniBatchSize)
+        public static List<List<Tuple<Matrix<double>, int>>> Minibatches(List<Tuple<Matrix<double>, int>> trainingData, int minibatchSize)
         {
             var miniBatches = new List<List<Tuple<Matrix<double>, int>>>(); // Dear me...
 
-            for (int i = 0; i < trainingData.Count; i += miniBatchSize)
+            for (int i = 0; i < trainingData.Count; i += minibatchSize)
             {
-                var endIsBeyondRange = i + miniBatchSize > trainingData.Count;
+                var endIsBeyondRange = i + minibatchSize > trainingData.Count;
 
                 if (endIsBeyondRange) miniBatches.Add(trainingData.GetRange(i, trainingData.Count - i));
-                else miniBatches.Add(trainingData.GetRange(i, miniBatchSize));
+                else miniBatches.Add(trainingData.GetRange(i, minibatchSize));
             }
 
             return miniBatches;

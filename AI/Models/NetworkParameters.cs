@@ -10,7 +10,7 @@ namespace AI.Models
     {
         public List<int> Layers { get; set; } = new List<int>();
         public int Epochs { get; set; }
-        public int MiniBatchSize { get; set; }
+        public int MinibatchSize { get; set; }
         public double LearningRate { get; set; }
         public bool EvaluateAfterEachEpoch { get; set; }
     }

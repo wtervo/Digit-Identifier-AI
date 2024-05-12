@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GridContext } from "@src/context/GridContext";
 import GridContextData from "@src/models/GridContextData";
-import { dummyNetwork } from "@src/constants/network";
+import { DUMMY_NETWORK } from "@src/constants/network";
 import { getNetworkStatusAll } from "@src/services/networkService";
 import Network from "@src/models/Network";
 
@@ -15,7 +15,7 @@ interface Props {
  * @param children 
  */
 const GridProvider: React.FC<Props> = ({children}) => {  
-  const [currentNetwork, setCurrentNetwork] = useState(dummyNetwork);
+  const [currentNetwork, setCurrentNetwork] = useState(DUMMY_NETWORK);
   const [loadedNetworks, setLoadedNetworks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 

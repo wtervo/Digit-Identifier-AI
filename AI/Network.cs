@@ -24,7 +24,7 @@ namespace AI
             Biases = Initialize.Biases(Layers);
             Weights = Initialize.Weights(Layers);
             Epochs = parameters.Epochs;
-            MiniBatchSize = parameters.MiniBatchSize;
+            MinibatchSize = parameters.MinibatchSize;
             LearningRate = parameters.LearningRate; // aka 'Eta'
             EvaluateAfterEachEpoch = parameters.EvaluateAfterEachEpoch;
             MnistData = new MnistData();
@@ -42,11 +42,12 @@ namespace AI
         public void SGD()
         {
             Status = NetworkCurrentStatus.Training;
+            Progress = $"0/{Epochs}";
 
             for (int i = 0; i < Epochs; i++)
             {
                 var trainingData = MnistData.TrainingDataShuffled();
-                var miniBatches = Initialize.MiniBatches(trainingData, MiniBatchSize);
+                var miniBatches = Initialize.Minibatches(trainingData, MinibatchSize);
 
                 foreach (var miniBatch in miniBatches) Calculation.UpdateMiniBatch(miniBatch);
                 if (Stop) break;
@@ -121,7 +122,7 @@ namespace AI
                 ID = ID,
                 Layers = Layers,
                 Epochs = Epochs,
-                MiniBatchSize = MiniBatchSize,
+                MinibatchSize = MinibatchSize,
                 LearningRate = LearningRate,
                 EvaluateAfterEachEpoch = EvaluateAfterEachEpoch,
                 Status = Status,

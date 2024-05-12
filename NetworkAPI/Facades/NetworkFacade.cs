@@ -54,6 +54,10 @@ namespace NetworkAPI.Facades
             else
             {
                 var currentNetworks = new List<NetworkInfo>();
+                foreach (Network network in Networks)
+                {
+                    currentNetworks.Add(network.NetworkStatus());
+                };
 
                 return currentNetworks;
             }

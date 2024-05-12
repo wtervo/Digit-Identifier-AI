@@ -1,18 +1,18 @@
 import Network from "@src/models/Network";
 import { NetworkCurrentStatus } from "@src/models/enums";
 
-export const minHiddenLayers = 1;
-export const maxHiddenLayers = 10;
-export const minHiddenLayerNeurons = 1;
-export const maxHiddenLayerNeurons = 25;
-export const minMinibatchSize = 1;
-export const maxMinibatchSize = 50;
-export const minEpochs = 1;
-export const maxEpochs = 50;
-export const minLearningRate = 0.1;
-export const maxLearningRate = 30;
+export const MIN_HIDDEN_LAYERS = 1;
+export const MAX_HIDDEN_LAYERS = 10;
+export const MIN_HIDDEN_LAYER_NEURONS = 1;
+export const MAX_HIDDEN_LAYER_NEURONS = 25;
+export const MIN_MINIBATCH_SIZE = 1;
+export const MAX_MINIBATCH_SIZE = 50;
+export const MIN_EPOCHS = 1;
+export const MAX_EPOCHS = 50;
+export const MIN_LEARNING_RATE = 0.1;
+export const MAX_LEARNING_RATE = 30;
 
-export const dummyNetwork: Network = {
+export const DUMMY_NETWORK: Network = {
   id: "",
   layers: [],
   epochs: 0,

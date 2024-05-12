@@ -4,7 +4,7 @@ import NetworkInfoGrid from "./NetworkInfoGrid";
 
 interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   key: string
-}
+};
 
 /**
  * Parent component for everything that displays network's data
@@ -23,7 +23,7 @@ const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
         ref={ref}
       >
         {currentNetwork.id !== "" &&
-          <NetworkInfoGrid />
+          <NetworkInfoGrid key={key} />
         }
       </div>
     );
