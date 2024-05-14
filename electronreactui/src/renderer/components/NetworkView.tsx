@@ -1,6 +1,8 @@
 import { useGridContext } from "@src/context/GridContext";
 import React from "react";
 import NetworkInfoGrid from "./NetworkInfoGrid";
+import Results from "./Results";
+import { NetworkCurrentStatus } from "@src/models/enums";
 
 interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   key: string
@@ -24,6 +26,9 @@ const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
       >
         {currentNetwork.id !== "" &&
           <NetworkInfoGrid key={key} />
+        }
+        {(currentNetwork.evaluation !== undefined && currentNetwork.status === NetworkCurrentStatus.EvaluationDone) &&
+          <Results />
         }
       </div>
     );

@@ -36,10 +36,10 @@ namespace NetworkAPI.Facades
             t.Start();
         }
 
-        public static void EvaluateNetwork(Guid networkID)
+        public static EvaluationResult EvaluateNetwork(Guid networkID)
         {
             var network = FindNetwork(networkID);
-            network.EvaluateNetwork();
+            return network.EvaluateNetwork();
         }
 
         public static NetworkInfo NetworkCurrentStatus(Guid networkID)

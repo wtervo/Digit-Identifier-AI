@@ -44,13 +44,13 @@ namespace NetworkAPI.Controllers
 
         [HttpPost]
         [Route("Evaluate")]
-        public ActionResult Evaluate(NetworkIdentity data)
+        public ActionResult<EvaluationResult> Evaluate(NetworkIdentity data)
         {
             try
             {
-                NetworkFacade.EvaluateNetwork(data.NetworkID);
+                var result = NetworkFacade.EvaluateNetwork(data.NetworkID);
 
-                return Ok();
+                return Ok(result);
             }
             catch (Exception ex)
             {

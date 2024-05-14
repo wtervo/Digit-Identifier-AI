@@ -22,5 +22,6 @@ export const DUMMY_NETWORK: Network = {
   status: NetworkCurrentStatus.Initialized,
   progress: "",
   biases: [],
-  weights: []
+  weights: [],
+  evaluation: undefined
 };

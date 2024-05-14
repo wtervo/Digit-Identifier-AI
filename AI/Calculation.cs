@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using AI.Models;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace AI
@@ -187,25 +188,39 @@ namespace AI
         /// <summary>
         /// Calculate network's performance against the test data set
         /// </summary>
-        public int Evaluate(List<Tuple<Matrix<double>, int>> testData)
+        public EvaluationResult Evaluate(List<Tuple<Matrix<double>, int>> testData)
         {
             var activationPairList = new List<Tuple<int, int>>();
+            var imagePixels = new List<Matrix<double>>();
 
             for (var i = 0; i < testData.Count; i++)
             {
                 var activations = FindActivations(testData[i].Item1).ToColumnArrays();
                 var chosenOutput = Array.IndexOf(activations[0], activations[0].Max());
                 activationPairList.Add(Tuple.Create(chosenOutput, testData[i].Item2));
+                imagePixels.Add(testData[i].Item1);
             }
 
             var correctActivations = 0;
+            var networkResults = new List<int>();
+            var actualResults = new List<int>();
 
             foreach (var pair in activationPairList)
             {
                 if (pair.Item1 == pair.Item2) correctActivations++;
+                networkResults.Add(pair.Item1);
+                actualResults.Add(pair.Item2);
             }
 
-            return correctActivations;
+            var results = new EvaluationResult
+            {
+                CorrectResults = correctActivations,
+                NetworkResults = networkResults,
+                ActualResults = actualResults,
+                ImagePixels = imagePixels
+            };
+
+            return results;
         }
 
         /// <summary>

@@ -86,15 +86,17 @@ namespace AI
         /// Test network's performance against a separate dataset that has not been used in the training.
         /// This does not affect the network's learning in any way. Current biases and weights are used
         /// </summary>
-        public void EvaluateNetwork()
+        public EvaluationResult EvaluateNetwork()
         {
             Status = NetworkCurrentStatus.Evaluation;
 
             var testingData = MnistData.TestingDataShuffled();
             var result = Calculation.Evaluate(testingData);
-            Debug.WriteLine($"Result of test data evaluation: {result} / {testingData.Count}");
+            Debug.WriteLine($"Result of test data evaluation: {result.CorrectResults} / {testingData.Count}");
 
             Status = NetworkCurrentStatus.EvaluationDone;
+
+            return result;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 import { DUMMY_NETWORK } from "@src/constants/network";
 import { POLLING_INTERVAL } from "@src/constants/ui";
 import { useGridContext } from "@src/context/GridContext";
+import EvaluationResult from "@src/models/EvaluationResult";
 import Network from "@src/models/Network";
 import { NetworkCurrentStatus } from "@src/models/enums";
 import { getNetworkCurrentStatus, getNetworkStatusAll, postEvaluateNetwork, postRemoveNetwork, postStopNetwork, postTrainNetwork } from "@src/services/networkService";
@@ -77,8 +78,12 @@ const NetworkOperations = React.forwardRef<HTMLDivElement, ComponentProps>(
     };
 
     const evaluateOnClick = async () => {
-      await postEvaluateNetwork(currentNetwork.id);
       console.log("Evaluation started");
+      const evaluation: EvaluationResult = await postEvaluateNetwork(currentNetwork.id);
+      const networkData: Network = await getNetworkCurrentStatus(currentNetwork.id);
+      gridContext.setCurrentNetwork({...networkData, evaluation });
+      const nonAlteredNetworks = gridContext.loadedNetworks.filter(network => network.id !== networkData.id);
+      gridContext.setLoadedNetworks([...nonAlteredNetworks, networkData]);
     };
 
     const stopOnClick = async () => {
