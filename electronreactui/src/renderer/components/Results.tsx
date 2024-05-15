@@ -3,7 +3,7 @@ import React from "react";
 
 const Results = () => {
   const gridContext = useGridContext();
-  const currentNetworkEval = gridContext.currentNetwork.evaluation;
+  const currentNetworkEval = gridContext.currentNetwork.evaluationResult;
 
   return(
     <div>

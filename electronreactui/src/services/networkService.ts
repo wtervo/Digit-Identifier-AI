@@ -15,9 +15,7 @@ export const postTrainNetwork = async (networkID: string) => {
 };
 
 export const postEvaluateNetwork = async (networkID: string) => {
-  const response = await axios.post(API_ROOT + "Evaluate", { NetworkID: networkID });
-  
-  return response.data;
+  await axios.post(API_ROOT + "Evaluate", { NetworkID: networkID });
 };
 
 export const getNetworkCurrentStatus = async (networkID: string) => {

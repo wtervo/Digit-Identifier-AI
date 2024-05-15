@@ -23,5 +23,6 @@ export const DUMMY_NETWORK: Network = {
   progress: "",
   biases: [],
   weights: [],
-  evaluation: undefined
+  evaluationResult: undefined,
+  evaluationHistory: []
 };

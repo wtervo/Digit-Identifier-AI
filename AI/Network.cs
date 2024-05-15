@@ -12,6 +12,8 @@ namespace AI
         private int LayersAmount { get; set; }
         private MnistData MnistData { get; set; }
         private Calculation Calculation { get; set; }
+        public EvaluationResult EvaluationResult { get; set; } = new EvaluationResult();
+        public List<int> EvaluationHistory { get; set; } = new List<int>();
         public bool Stop { get; set; } = false;
 
         public Network(NetworkParameters parameters)
@@ -86,17 +88,17 @@ namespace AI
         /// Test network's performance against a separate dataset that has not been used in the training.
         /// This does not affect the network's learning in any way. Current biases and weights are used
         /// </summary>
-        public EvaluationResult EvaluateNetwork()
+        public void EvaluateNetwork()
         {
-            Status = NetworkCurrentStatus.Evaluation;
+            if (!EvaluateAfterEachEpoch || EvaluationHistory.Count >= Epochs) Status = NetworkCurrentStatus.Evaluation;
 
             var testingData = MnistData.TestingDataShuffled();
-            var result = Calculation.Evaluate(testingData);
-            Debug.WriteLine($"Result of test data evaluation: {result.CorrectResults} / {testingData.Count}");
+            EvaluationResult = Calculation.Evaluate(testingData);
+            EvaluationHistory.Add(EvaluationResult.CorrectResults);
 
-            Status = NetworkCurrentStatus.EvaluationDone;
+            Debug.WriteLine($"Result of test data evaluation: {EvaluationResult.CorrectResults} / {testingData.Count}");
 
-            return result;
+            if (!EvaluateAfterEachEpoch || EvaluationHistory.Count >= Epochs) Status = NetworkCurrentStatus.EvaluationDone;
         }
 
         /// <summary>
@@ -130,7 +132,9 @@ namespace AI
                 Status = Status,
                 Progress = Progress,
                 Biases = biases,
-                Weights = weights
+                Weights = weights,
+                EvaluationResult = EvaluationResult,
+                EvaluationHistory = EvaluationHistory
             };
 
             return status;

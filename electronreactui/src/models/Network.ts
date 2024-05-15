@@ -12,5 +12,6 @@ export default interface Network extends NetworkCreation {
     progress: string,
     biases: Array<Matrix>,
     weights: Array<Matrix>,
-    evaluation: EvaluationResult
+    evaluationResult: EvaluationResult,
+    evaluationHistory: Array<number>
 };

@@ -41,19 +41,27 @@ const NetworkInfoGrid = React.forwardRef<HTMLDivElement, ComponentProps>(
     const currentNetwork = gridContext.currentNetwork;
 
     return (
-      <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
-        <NetworkOperations key="item1" />
-        <p className="network-info-grid-item" key="item2">{"Name: Dummy Name"} &emsp; &emsp; {`ID: ${currentNetwork.id}`}</p>
-        <p className="network-info-grid-item" key="item3">Layers: {currentNetwork.layers.join(" ")}</p>
-        <p className="network-info-grid-item" key="item4">Epochs: {currentNetwork.epochs}</p>
-        <p className="network-info-grid-item" key="item5">Minibatch Size: {currentNetwork.minibatchSize}</p>
-        <p className="network-info-grid-item" key="item6">Learning Rate: {currentNetwork.learningRate}</p>
-        <p className="network-info-grid-item" key="item7">Evaluate After Each Epoch: {currentNetwork.evaluateAfterEachEpoch.toString()}</p>
-        <p className="network-info-grid-item" key="item8">Network Status: <b>{NetworkCurrentStatus[currentNetwork.status]}</b></p>
-        <p className="network-info-grid-item" key="item9">Progress:
-          <b> {currentNetwork.progress !== "" ? currentNetwork.progress : "Training not started"}</b>
-        </p>
-      </ResponsiveGridLayout>
+      <div
+        style={{ ...style }}
+        // className={["classes you wish to apply", className].join(' ')}
+        key={key}
+        {...restOfProps}
+        ref={ref}
+      >
+        <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
+          <NetworkOperations key="item1" />
+          <p className="network-info-grid-item" key="item2">{"Name: Dummy Name"} &emsp; &emsp; {`ID: ${currentNetwork.id}`}</p>
+          <p className="network-info-grid-item" key="item3">Layers: {currentNetwork.layers.join(" ")}</p>
+          <p className="network-info-grid-item" key="item4">Epochs: {currentNetwork.epochs}</p>
+          <p className="network-info-grid-item" key="item5">Minibatch Size: {currentNetwork.minibatchSize}</p>
+          <p className="network-info-grid-item" key="item6">Learning Rate: {currentNetwork.learningRate}</p>
+          <p className="network-info-grid-item" key="item7">Evaluate After Each Epoch: {currentNetwork.evaluateAfterEachEpoch.toString()}</p>
+          <p className="network-info-grid-item" key="item8">Network Status: <b>{NetworkCurrentStatus[currentNetwork.status]}</b></p>
+          <p className="network-info-grid-item" key="item9">Progress:
+            <b> {currentNetwork.progress !== "" ? currentNetwork.progress : "Training not started"}</b>
+          </p>
+        </ResponsiveGridLayout>
+      </div>
     );
   }
 );

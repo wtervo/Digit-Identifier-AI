@@ -3,6 +3,7 @@ import "@styles/app.scss";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import Grid from "./Grid";
+import GridProvider from "./GridProvider";
 
 /**
  * Application's main component housing themes and network's main component
@@ -46,7 +47,9 @@ const Application: React.FC = () => {
 
   return (
     <div id='erwt'>
-      <Grid />
+      <GridProvider>
+        <Grid />
+      </GridProvider>
       <div className='footer'>
         <div className='center'>
           <button onClick={toggleTheme}>

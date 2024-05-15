@@ -44,13 +44,13 @@ namespace NetworkAPI.Controllers
 
         [HttpPost]
         [Route("Evaluate")]
-        public ActionResult<EvaluationResult> Evaluate(NetworkIdentity data)
+        public ActionResult<string> Evaluate(NetworkIdentity data)
         {
             try
             {
-                var result = NetworkFacade.EvaluateNetwork(data.NetworkID);
+                NetworkFacade.EvaluateNetwork(data.NetworkID);
 
-                return Ok(result);
+                return Ok("Evaluation started");
             }
             catch (Exception ex)
             {
@@ -90,13 +90,13 @@ namespace NetworkAPI.Controllers
 
         [HttpPost]
         [Route("Stop")]
-        public ActionResult Stop(NetworkIdentity data)
+        public ActionResult<string> Stop(NetworkIdentity data)
         {
             try
             {
                 NetworkFacade.StopNetwork(data.NetworkID);
 
-                return Ok();
+                return Ok("Network stopped");
             }
             catch (Exception ex)
             {
@@ -106,13 +106,13 @@ namespace NetworkAPI.Controllers
 
         [HttpPost]
         [Route("Remove")]
-        public ActionResult Remove(NetworkIdentity data)
+        public ActionResult<string> Remove(NetworkIdentity data)
         {
             try
             {
                 NetworkFacade.RemoveNetwork(data.NetworkID);
 
-                return Ok();
+                return Ok("Network removed");
             }
             catch (Exception ex)
             {

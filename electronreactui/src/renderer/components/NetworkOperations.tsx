@@ -54,7 +54,7 @@ const NetworkOperations = React.forwardRef<HTMLDivElement, ComponentProps>(
     
     useEffect(() => {
       let intervalId: NodeJS.Timeout;
-      // Poll data when training starts
+      // Poll data when training starts, stop when training ends
       if (currentNetwork.status === NetworkCurrentStatus.TrainingDone) {
         clearInterval(intervalId);
         setIsTraining(false);
@@ -78,12 +78,12 @@ const NetworkOperations = React.forwardRef<HTMLDivElement, ComponentProps>(
     };
 
     const evaluateOnClick = async () => {
-      console.log("Evaluation started");
-      const evaluation: EvaluationResult = await postEvaluateNetwork(currentNetwork.id);
+      await postEvaluateNetwork(currentNetwork.id);
       const networkData: Network = await getNetworkCurrentStatus(currentNetwork.id);
-      gridContext.setCurrentNetwork({...networkData, evaluation });
+      gridContext.setCurrentNetwork( networkData );
       const nonAlteredNetworks = gridContext.loadedNetworks.filter(network => network.id !== networkData.id);
       gridContext.setLoadedNetworks([...nonAlteredNetworks, networkData]);
+      console.log("Evaluation started");
     };
 
     const stopOnClick = async () => {
@@ -100,7 +100,7 @@ const NetworkOperations = React.forwardRef<HTMLDivElement, ComponentProps>(
       console.log("Training stopped");
     };
 
-    const removeNetwork = async () => {
+    const removeOnClick = async () => {
       await postRemoveNetwork(currentNetwork.id);
       const networks: Array<Network> = await getNetworkStatusAll();
       if (networks.length === 0) {
@@ -112,22 +112,30 @@ const NetworkOperations = React.forwardRef<HTMLDivElement, ComponentProps>(
         gridContext.setLoadedNetworks(remainingNetworks);
       }
     };
-
+    console.log(currentNetwork);
     return(
-      <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
-        <button key="item1" title="Starts training the network with the input parameters. This may take a long time."
-          disabled={gridContext.isLoading} onClick={trainingOnClick}>Start Training
-        </button>
-        <button key="item2" title="Evaluates the performance of the network. Evaluation can be done after the network has been trained."
-          disabled={gridContext.isLoading || !canBeEvaluated} onClick={evaluateOnClick}>Evaluate
-        </button>
-        <button key="item3" title="Removes the network. This cannot be undone." disabled={gridContext.isLoading}
-          onClick={removeNetwork}>Delete
-        </button>
-        <button key="item4" disabled={currentNetwork.status !== NetworkCurrentStatus.Training}
-          title="Stops the training of the network" onClick={stopOnClick}>Stop
-        </button>
-      </ResponsiveGridLayout>
+      <div
+        style={{ ...style }}
+        // className={["classes you wish to apply", className].join(' ')}
+        key={key}
+        {...restOfProps}
+        ref={ref}
+      >
+        <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
+          <button key="item1" title="Starts training the network with the input parameters. This may take a long time."
+            disabled={gridContext.isLoading} onClick={trainingOnClick}>Start Training
+          </button>
+          <button key="item2" title="Evaluates the performance of the network. Evaluation can be done after the network has been trained."
+            disabled={gridContext.isLoading || !canBeEvaluated} onClick={evaluateOnClick}>Evaluate
+          </button>
+          <button key="item3" title="Removes the network. This cannot be undone." disabled={gridContext.isLoading}
+            onClick={removeOnClick}>Delete
+          </button>
+          <button key="item4" disabled={currentNetwork.status !== NetworkCurrentStatus.Training}
+            title="Stops the training of the network" onClick={stopOnClick}>Stop
+          </button>
+        </ResponsiveGridLayout>
+      </div>
     );
   }
 )

@@ -9,5 +9,7 @@ namespace AI.Models
         public string Progress { get; set; }
         public List<Matrix<double>> Biases { get; set; }
         public List<Matrix<double>> Weights { get; set; }
+        public EvaluationResult EvaluationResult { get; set; }
+        public List<int> EvaluationHistory { get; set; }
     }
 }

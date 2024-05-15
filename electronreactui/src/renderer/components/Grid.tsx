@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import NetworkView from "./NetworkView";
 import NetworkConfigForm from "./NetworkConfigForm";
-import GridProvider from "./GridProvider";
 import NetworkSelector from "./NetworkSelector";
+import NetworkInfoGrid from "./NetworkInfoGrid";
+import { useGridContext } from "@src/context/GridContext";
+import Results from "./Results";
+import { NetworkCurrentStatus } from "@src/models/enums";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -38,6 +40,8 @@ const responsiveProps = {
  */
 const Grid = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const gridContext = useGridContext();
+  const currentNetwork = gridContext.currentNetwork;
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,13 +56,16 @@ const Grid = () => {
   }, [windowWidth]);
 
   return(
-    <GridProvider>
-      <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
-        <NetworkSelector key="item1" />
-        <NetworkView key="item2" />
-        <NetworkConfigForm key="item3" />
-      </ResponsiveGridLayout>
-    </GridProvider>
+    <ResponsiveGridLayout useCSSTransforms={false} {...responsiveProps}>
+      <NetworkSelector key="item1" />
+      <NetworkConfigForm key="item3" />
+      {currentNetwork.id !== "" &&
+        <NetworkInfoGrid key="item2" />
+      }
+      {(currentNetwork.evaluationResult !== undefined && currentNetwork.status === NetworkCurrentStatus.EvaluationDone) &&
+        <Results />
+      }
+    </ResponsiveGridLayout>
   );
 };
 

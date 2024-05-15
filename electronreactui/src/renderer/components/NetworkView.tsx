@@ -15,7 +15,7 @@ const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
   ({ style, className, children, key, ...restOfProps }, ref) => {
     const gridContext = useGridContext();
     const currentNetwork = gridContext.currentNetwork;
-    
+
     return (
       <div
         style={{ ...style }}
@@ -27,7 +27,7 @@ const NetworkView = React.forwardRef<HTMLDivElement, ComponentProps>(
         {currentNetwork.id !== "" &&
           <NetworkInfoGrid key={key} />
         }
-        {(currentNetwork.evaluation !== undefined && currentNetwork.status === NetworkCurrentStatus.EvaluationDone) &&
+        {(currentNetwork.evaluationResult !== undefined && currentNetwork.status === NetworkCurrentStatus.EvaluationDone) &&
           <Results />
         }
       </div>
